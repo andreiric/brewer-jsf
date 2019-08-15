@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:o="http://omnifaces.org/ui">
+
+	<ui:composition template="/WEB-INF/templates/LayoutPadrao.xhtml">
+
+		<f:metadata>
+			<o:viewParam name="codigo" value="#{cadastroVendaBean.venda}" />
+			<f:viewAction action="#{cadastroVendaBean.inicializar()}" />
+		</f:metadata>
+	
+		<ui:define name="titulo">Cadastro de Venda</ui:define>
+		
+		<ui:define name="conteudo">
+			<div class="ui-fluid">
+				<div class="ui-g aw-page-header">
+					<div class="ui-g-11">
+						<h1 class="aw-page-title">
+							#{cadastroVendaBean.venda.nova ? "Cadastro de Venda" : "Edição da venda nº ".concat(cadastroVendaBean.venda.codigo)}
+						</h1>
+					</div>
+					<div class="ui-g-1">
+						<p:button styleClass="aw-page-control" icon="fa fa-search" 
+							outcome="/venda/PesquisaVendas" />
+					</div>
+				</div>
+			</div>
+			
+			<h:form  id="frm">
+				<div class="ui-fluid aw-content-form">
+					<p:messages autoUpdate="true" closable="true" />
+				
+					<div class="ui-g">
+						<div class="ui-g-12 ui-md-4 ui-lg-4">
+							<div class="aw-box">
+								<div class="aw-box__icon">
+									<i class="fa fa-usd fa-3x"></i>
+								</div>
+								<div class="aw-box__value">
+									R$<span><h:outputText id="valorTotal" value="#{cadastroVendaBean.valorTotalVenda}"><f:convertNumber locale="pt_BR" pattern="#,##0.00" /></h:outputText></span>
+								</div>
+								<div class="aw-box__title">Total</div>
+							</div>
+						</div>
+
+						<div class="ui-g-12 ui-md-4 ui-lg-4">
+							<div class="aw-box">
+								<div class="aw-box__icon">
+									<i class="fa fa-tag fa-3x"></i>
+								</div>
+								<div class="aw-box__value">#{cadastroVendaBean.venda.status.descricao}</div>
+								<div class="aw-box__title">Status</div>
+							</div>
+						</div>
+						
+						<div class="ui-g-12 ui-md-4 ui-lg-4">
+							<div class="aw-box">
+								<div class="aw-box__icon">
+									<i class="fa fa-calendar fa-3x"></i>
+								</div>
+								<div class="aw-box__value">
+									<span class="js-tooltip">#{cadastroVendaBean.venda.diasCriacao}</span>
+								</div>
+								<div class="aw-box__title">Criação</div>
+							</div>
+						</div>
+					</div>
+					
+					<div class="ui-g">
+						<div class="ui-g-12 ui-md-4 ui-lg-4 bw-required">
+							<p:outputLabel value="Cliente" for="nomeCliente" />
+							<div class="bw-pesquisa-rapida-cliente">
+								<p:inputText id="nomeCliente" readonly="true" style="background-color: #eee;" 
+									placeholder="Clique na lupa ao lado para pesquisar o cliente" value="#{cadastroVendaBean.venda.cliente.nome}" />
+								<p:commandButton icon="ui-icon-search" actionListener="#{pesquisaRapidaClienteBean.abrirDialogo()}" 
+									disabled="#{cadastroVendaBean.venda.salvarProibido}">
+									<p:ajax event="dialogReturn" listener="#{cadastroVendaBean.selecionouCliente}"
+										process="@this" update="nomeCliente" />
+								</p:commandButton>
+							</div>
+						</div>
+						
+						<div class="ui-g-12 ui-md-4 ui-lg-4 bw-required">
+							<p:outputLabel value="Valor do Frete" for="valorFrete" />
+							<p:inputNumber id="valorFrete" value="#{cadastroVendaBean.venda.valorFrete}" symbol="R$ " 
+								decimalSeparator="PF('cd').show()," thousandSeparator=".">
+								<f:convertNumber locale="pt_BR" />
+								<p:ajax event="change" listener="#{cadastroVendaBean.venda.calcularValorTotal()}" update="valorTotal" />
+							</p:inputNumber>
+						</div>
+						
+						<div class="ui-g-12 ui-md-4 ui-lg-4 bw-required">
+							<p:outputLabel value="Valor do Desconto" for="valorDesconto" />
+							<p:inputNumber id="valorDesconto" value="#{cadastroVendaBean.venda.valorDesconto}" symbol="R$ "
+								decimalSeparator="," thousandSeparator=".">
+								<f:convertNumber locale="pt_BR" />
+								<p:ajax event="change" listener="#{cadastroVendaBean.venda.calcularValorTotal()}" update="valorTotal" />
+							</p:inputNumber>	
+						</div>
+					</div>
+					
+					<div class="ui-g">
+						<div class="ui-g-12 ui-md-12 ui-lg-12">
+							<p:tabView id="tabViewVendas" style="border-bottom: none;">
+								<p:tab title="Cervejas">
+									<p:outputPanel id="itensVenda">
+										<div class="ui-g">
+											<div class="ui-g-12 ui-md-12 ui-lg-12">
+												<p:autoComplete value="#{cadastroVendaBean.cervejaSelecionada}" completeMethod="#{cadastroVendaBean.pesquisarCervejas}" var="cerveja" 
+													itemValue="#{cerveja}" itemLabel="#{cerveja.nome}" converter="cervejaConverter"
+													placeholder="Pesquise e adicione a cerveja pelo SKU ou nome" minQueryLength="3" queryDelay="300">
+													
+													<p:column style="width: 30px">
+														<p:graphicImage name="#{cadastroVendaBean.getUrlThumbnailFoto(cerveja.fotoOuMock)}" />
+													</p:column>
+													
+													<p:column>
+														<h:outputText value="#{cerveja.nome}" /><br />
+														<h:outputText value="#{cerveja.sku}" /><br />
+														<h:outputText value="#{cerveja.origem.descricao}" />
+													</p:column>
+													
+													<p:column style="width: 80px">
+														<h:outputText value="R$ " />
+														<h:outputText value="#{cerveja.valor}">
+															<f:convertNumber locale="pt_BR" pattern="#,##0.00" />
+														</h:outputText>
+													</p:column>
+													
+													<p:ajax event="itemSelect" listener="#{cadastroVendaBean.adicionarItem}" update="frm:tabViewVendas:itensVenda frm:valorTotal"  />
+												</p:autoComplete>
+											</div>
+										</div>
+										<div class="ui-g">
+											<div class="ui-g-12 ui-md-12 ui-lg-12">
+												<div class="bw-tabela-cervejas">
+													<ui:include src="/venda/TabelaItensVenda.xhtml" />
+												</div>
+											</div>
+										</div>
+									</p:outputPanel>
+								</p:tab>
+								<p:tab title="Entrega">
+									<div class="ui-g">
+										<div class="ui-g-12 ui-md-3 ui-lg-3">
+											<p:outputLabel value="Data de Entrega" for="dataEntrega" />
+											<p:calendar id="dataEntrega" value="#{cadastroVendaBean.venda.dataEntrega}" 
+												pattern="dd/MM/yyyy" />
+										</div>
+										<div class="ui-g-12 ui-md-3 ui-lg-3">
+											<p:outputLabel value="Horário de Entrega" for="horarioEntrega" />
+											<p:calendar id="horarioEntrega" value="#{cadastroVendaBean.venda.horarioEntrega}" 
+												pattern="HH:mm" timeOnly="true" locale="pt_BR" />
+										</div>
+									</div>
+									<div class="ui-g">
+										<div class="ui-g-12 ui-md-12 ui-lg-12">
+											<p:inputTextarea id="observacaoEntrega" rows="5" value="#{cadastroVendaBean.venda.observacao}" 
+												placeholder="Alguma observação para o entregador desse pedido?" />
+										</div>
+									</div>
+								</p:tab>
+							</p:tabView>
+						</div>
+					</div>
+					
+					<p:outputPanel rendered="#{cadastroVendaBean.venda.salvarPermitido}">
+						<div class="ui-g" style="clear: both;">
+							<p:outputPanel styleClass="ui-g-3 ui-md-2 ui-lg-2" style="width: 110px">
+								<p:splitButton value="Salvar" action="#{cadastroVendaBean.salvar()}" update="@form">
+									<p:menuitem value="Salvar e emitir" action="#{cadastroVendaBean.emitir()}" update="@form" />
+									<p:menuitem value="Salvar e enviar por e-mail" action="#{cadastroVendaBean.enviarEmail()}" update="@form" />
+								</p:splitButton>
+							</p:outputPanel>
+							<p:outputPanel styleClass="ui-g-3 ui-md-2 ui-lg-2" style="width: 110px" rendered="${not cadastroVendaBean.venda.nova}">
+								<p:commandButton value="Cancelar" action="#{cadastroVendaBean.cancelar()}" update="@form" />
+							</p:outputPanel>
+						</div>
+					</p:outputPanel>
+				</div>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</html>

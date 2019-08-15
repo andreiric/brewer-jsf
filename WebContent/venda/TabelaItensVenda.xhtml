@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+
+	<ui:composition>
+		<p:dataScroller id="tabelaItens" value="#{cadastroVendaBean.tabelaItensVenda.itens}" var="item" rendered="#{not cadastroVendaBean.tabelaItensVenda.tabelaVazia}">
+			<h:panelGrid columns="3" layout="grid" styleClass="bw-tabela-item" columnClasses="bw-tabela-item__foto,bw-tabela-item__detalhes,bw-tabela-item__valores">
+				<p:graphicImage name="#{cadastroVendaBean.getUrlThumbnailFoto(item.cerveja.fotoOuMock)}" />
+				
+				<h:panelGrid columns="1" layout="grid">
+					<h:outputText value="#{item.cerveja.nome}" />
+					<h:outputText value="#{item.cerveja.sku}" />
+					<h:outputText value="#{item.cerveja.origem.descricao}" />
+				</h:panelGrid>
+				
+				<h:panelGrid columns="1">
+					<p:outputPanel>
+						<p:spinner value="#{item.quantidade}" style="width: 70px">
+							<p:ajax event="change" update="tabelaItens frm:valorTotal" />
+						</p:spinner>
+						<h:outputText value=" x R$ " />
+						<h:outputText value="#{item.valorUnitario}">
+							<f:convertNumber currencyCode="BRL" locale="pt_BR" pattern="#,##0.00;(#,##0.00)" />
+						</h:outputText>
+					</p:outputPanel>	
+					<p:outputPanel styleClass="bw-tabela-item__valor-total">		
+	  					<h:outputText value="R$ " />
+						<h:outputText value="#{item.valorTotal}">
+							<f:convertNumber currencyCode="BRL" locale="pt_BR" pattern="#,##0.00;(#,##0.00)" />
+						</h:outputText>
+					</p:outputPanel>
+					<p:commandButton value="Excluir" actionListener="#{cadastroVendaBean.excluirItem(item.cerveja)}" update="frm:tabViewVendas:itensVenda frm:valorTotal">
+						<p:confirm />
+					</p:commandButton>
+				</h:panelGrid>
+			</h:panelGrid>
+		</p:dataScroller>
+		<p:confirmDialog header="Confirmação" message="Excluir este item da venda?"  global="true">
+			<p:commandButton value="Sim" styleClass="ui-priority-primary ui-confirmdialog-yes"/>
+			<p:commandButton value="Não" styleClass="ui-confirmdialog-no" />
+		</p:confirmDialog>
+	
+		<p:panel id="tabelaItensVazia" styleClass="bw-tabela-cervejas__vazia" rendered="#{cadastroVendaBean.tabelaItensVenda.tabelaVazia}">
+			<i class="fa fa-shopping-cart"></i>
+			<span>Você ainda não adicionou nenhuma cerveja.</span>
+		</p:panel>
+	</ui:composition>
+</html>

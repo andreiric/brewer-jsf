@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+	<ui:composition template="/WEB-INF/templates/LayoutPadrao.xhtml">
+	
+		<ui:define name="titulo">Pesquisa de Estilos</ui:define>
+		
+		<ui:define name="conteudo">
+			<div class="ui-fluid">
+				<div class="ui-g aw-page-header">
+					<div class="ui-g-11">
+						<h1 class="aw-page-title">Pesquisa de Estilos</h1>
+					</div>
+					<div class="ui-g-1">
+						<p:button styleClass="aw-page-control" icon="fa fa-plus-circle" outcome="/estilo/CadastroEstilo" />
+					</div>
+				</div>
+			</div>
+	
+			<h:form id="frm">
+				<div class="ui-fluid aw-content-form">
+					<ui:include src="/WEB-INF/templates/DialogoConfirmacaoExclusao.xhtml" /> 
+					
+					<div class="ui-g">
+						<div class="ui-g-12 ui-md-12 ui-lg-12">
+							<p:outputLabel value="Nome" for="nome" />
+							<p:inputText id="nome" value="#{pesquisaEstilosBean.estiloFilter.nome}" />
+						</div>
+					</div>
+					
+					<div class="ui-g">
+						<div class="ui-g-5 ui-md-3 ui-lg-2">
+							<p:commandButton value="Pesquisar" styleClass="ui-priority-primary" style="width: 100px"
+								update="tabela" process="@form" />
+						</div>
+					</div>
+				</div>
+				
+				<div class="ui-g ">
+					<div class="ui-g-12 ui-md-12 ui-lg-12">
+						<p:dataTable value="#{pesquisaEstilosBean.model}" var="estilo" 
+							emptyMessage="Nenhum estilo encontrado" paginator="true" paginatorPosition="bottom"
+							rows="2" id="tabela" lazy="true" >
+							
+							<p:column headerText="Código" styleClass="table-estilos-col-codigo">
+								<h:outputText value="#{estilo.codigo}" />
+							</p:column>
+							<p:column headerText="Nome" styleClass="table-estilos-col-nome" sortBy="#{estilo.nome}">
+								<h:outputText value="#{estilo.nome}" />
+							</p:column>
+							<p:column styleClass="table-col-acoes">
+								<p:link id="editar" outcome="/estilo/CadastroEstilo">
+									<span class="fa fa-pencil" />
+									<f:param name="codigo" value="#{estilo.codigo}" />
+								</p:link>
+								<p:tooltip for="editar" position="top" value="Editar" />
+								
+								<p:commandLink id="excluir" process="@this" update="@form" 
+									action="#{pesquisaEstilosBean.excluir()}">
+									<span class="fa fa-remove" />
+									<f:setPropertyActionListener value="#{estilo}" 
+										target="#{pesquisaEstilosBean.estiloSelecionado}" />
+									<p:confirm message="Excluir '#{estilo.nome}'? Você não poderá recuperar depois." />
+								</p:commandLink>
+								<p:tooltip for="excluir" position="top" value="Excluir" />
+							</p:column>
+						</p:dataTable>
+					</div>
+				</div>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+
+</html>

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+
+	<ui:composition>
+		<aside class="aw-sidebar js-sidebar"> 
+			<div class="aw-sidebar__content">
+				<nav class="aw-menu js-menu">
+					<ul class="aw-menu__list">
+						<li class="aw-menu__item #{menuLateralBean.uri.equals('/') || menuLateralBean.uri.equals('/Dashboard.xhtml') ? 'is-active' : ''}">
+							<h:link outcome="/Dashboard">
+								<i class="fa  fa-fw  fa-home" />
+								<span>Dashboard</span>
+							</h:link>
+						</li>
+						<li class="aw-menu__item">
+							<h:link>
+								<i class="fa  fa-fw  fa-credit-card" /><span>Vendas</span>
+								<i class="aw-menu__navigation-icon  fa" />
+							</h:link>
+							
+							<ul class="aw-menu__list  aw-menu__list--sublist ">
+								<li class="aw-menu__item  aw-menu__item--link #{menuLateralBean.uri.equals('/venda/CadastroVenda.xhtml') ? 'is-active' : ''}">
+									<h:link outcome="/venda/CadastroVenda">Cadastro de Venda</h:link>
+								</li>
+							</ul>
+							<ul class="aw-menu__list  aw-menu__list--sublist">
+								<li class="aw-menu__item  aw-menu__item--link #{menuLateralBean.uri.equals('/venda/PesquisaVendas.xhtml') ? 'is-active' : ''}">
+									<h:link outcome="/venda/PesquisaVendas">Pesquisa de Venda</h:link>
+								</li>
+							</ul>
+						</li>
+						<li class="aw-menu__item">
+							<h:link>
+								<i class="fa  fa-fw  fa-truck" /><span>Estoque</span>
+								<i class="aw-menu__navigation-icon  fa" />
+							</h:link>
+							
+							<ul class="aw-menu__list  aw-menu__list--sublist">
+								<li class="aw-menu__item  aw-menu__item--link #{menuLateralBean.uri.contains('/estilo') ? 'is-active' : ''}">
+									<h:link outcome="/estilo/PesquisaEstilos">Estilos</h:link>
+								</li>
+							</ul>
+							<ul class="aw-menu__list  aw-menu__list--sublist">
+								<li class="aw-menu__item  aw-menu__item--link #{menuLateralBean.uri.contains('/cerveja') ? 'is-active' : ''}">
+									<h:link outcome="/cerveja/PesquisaCervejas">Cervejas</h:link>
+								</li>
+							</ul>
+						</li>
+						<li class="aw-menu__item">
+							<h:link>
+								<i class="fa  fa-fw  fa-file-text" /><span>Cadastros</span>
+								<i class="aw-menu__navigation-icon  fa" />
+							</h:link>
+							
+							<ul class="aw-menu__list  aw-menu__list--sublist">
+								<li class="aw-menu__item  aw-menu__item--link #{menuLateralBean.uri.contains('/cidade') ? 'is-active' : ''}">
+									<h:link outcome="/cidade/PesquisaCidades">Cidades</h:link>
+								</li>
+							</ul>
+							<ul class="aw-menu__list  aw-menu__list--sublist">
+								<li class="aw-menu__item  aw-menu__item--link #{menuLateralBean.uri.contains('/cliente') ? 'is-active' : ''}">
+									<h:link outcome="/cliente/PesquisaClientes">Clientes</h:link>
+								</li>
+							</ul>
+							<ul class="aw-menu__list  aw-menu__list--sublist">
+								<li class="aw-menu__item  aw-menu__item--link #{menuLateralBean.uri.contains('/usuario') ? 'is-active' : ''}">
+									<h:link outcome="/usuario/PesquisaUsuarios">Usuários</h:link>
+								</li>
+							</ul>
+						</li>
+						<li class="aw-menu__item">
+							<h:link>
+								<i class="fa  fa-fw  fa-file-pdf-o" /><span>Relatórios</span>
+								<i class="aw-menu__navigation-icon  fa" />
+							</h:link>
+							
+							<ul class="aw-menu__list  aw-menu__list--sublist">
+								<li class="aw-menu__item  aw-menu__item--link #{menuLateralBean.uri.contains('/relatorio') ? 'is-active' : ''}">
+									<h:link outcome="/relatorio/RelatorioVendasEmitidas">Vendas Emitidas</h:link>
+								</li>
+							</ul>
+						</li>
+					</ul>
+				</nav>
+			</div>
+		</aside>
+	</ui:composition>
+</html>

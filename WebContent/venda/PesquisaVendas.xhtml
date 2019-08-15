@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+	<ui:composition template="/WEB-INF/templates/LayoutPadrao.xhtml">
+		
+		<f:metadata>
+			<f:viewAction action="#{pesquisaVendasBean.inicializar()}" />
+		</f:metadata>
+		
+		<ui:define name="titulo">Pesquisa de Vendas</ui:define>
+		
+		<ui:define name="conteudo">
+			<div class="ui-fluid">
+				<div class="ui-g aw-page-header">
+					<div class="ui-g-11">
+						<h1 class="aw-page-title">Pesquisa de Vendas</h1>
+					</div>
+					<div class="ui-g-1">
+						<p:button styleClass="aw-page-control" icon="fa fa-plus-circle" outcome="/venda/CadastroVenda" />
+					</div>
+				</div>
+			</div>
+		
+			<h:form id="frm">
+				<div class="ui-fluid aw-content-form">
+					<div class="ui-g">
+						<div class="ui-g-12 ui-md-6 ui-lg-6">
+							<p:outputLabel value="Código" for="codigo" />
+							<p:inputText id="codigo" value="#{pesquisaVendasBean.vendaFilter.codigo}" />
+						</div>
+						<div class="ui-g-12 ui-md-6 ui-lg-6">
+							<p:outputLabel value="Status" for="status" />
+							<p:selectOneMenu id="status" value="#{pesquisaVendasBean.vendaFilter.status}" >
+								<f:selectItem itemLabel="Todos os status" noSelectionOption="true" />
+								<f:selectItems value="#{pesquisaVendasBean.todosStatus}" var="status" 
+									itemValue="#{status}" itemLabel="#{status.descricao}" />
+							</p:selectOneMenu>
+						</div>
+					</div>
+					<div class="ui-g">
+						<div class="ui-g-12 ui-md-6 ui-lg-6">
+							<p:outputLabel value="Data de criação" for="dataCriacaoDe" />
+							<h:panelGrid columns="3" columnClasses="ui-grid-2 ui-grid-1 ui-grid-2"
+								style="margin-top: -2px; margin-left: -2px;">
+								<p:calendar id="dataCriacaoDe" value="#{pesquisaVendasBean.vendaFilter.dataInicial}" 
+									pattern="dd/MM/yyyy" />
+								<p:outputLabel value="até" for="dataCriacaoAte" />
+								<p:calendar id="dataCriacaoAte" value="#{pesquisaVendasBean.vendaFilter.dataFinal}"
+									pattern="dd/MM/yyyy" />
+							</h:panelGrid>
+						</div>
+						<div class="ui-g-12 ui-md-6 ui-lg-6">
+							<p:outputLabel value="Valor total" for="valorDe" />
+							<h:panelGrid columns="3" columnClasses="ui-grid-2 ui-grid-1 ui-grid-2"
+								style="margin-top: -2px; margin-left: -2px;">
+								<p:inputNumber id="valorDe" value="#{pesquisaVendasBean.vendaFilter.valorInicial}" 
+									 decimalSeparator="," thousandSeparator=".">
+									<f:convertNumber locale="pt_BR" pattern="#,##0.00" />
+								</p:inputNumber>
+								<p:outputLabel value="até" for="valorAte" />
+								<p:inputNumber id="valorAte" value="#{pesquisaVendasBean.vendaFilter.valorFinal}" 
+									 decimalSeparator="," thousandSeparator=".">
+									<f:convertNumber locale="pt_BR" pattern="#,##0.00" />
+								</p:inputNumber>
+							</h:panelGrid>
+						</div>
+					</div>
+					<div class="ui-g">
+						<div class="ui-g-12 ui-md-6 ui-lg-6">
+							<p:outputLabel value="Nome cliente" for="nomeCliente" />
+							<p:inputText id="nomeCliente" value="#{pesquisaVendasBean.vendaFilter.nomeCliente}" />
+						</div>
+						<div class="ui-g-12 ui-md-6 ui-lg-6">
+							<p:outputLabel value="CPF/CNPJ" for="cpfOuCnpj" />
+							<p:inputText id="cpfOuCnpj" value="#{pesquisaVendasBean.vendaFilter.cpfOuCnpjCliente}" />
+						</div>
+					</div>
+
+					<div class="ui-g">
+						<div class="ui-g-5 ui-md-3 ui-lg-2">
+							<p:commandButton value="Pesquisar" styleClass="ui-priority-primary" style="width: 100px"
+								update="tabela" process="@form" />
+						</div>
+					</div>
+				</div>
+				
+				<div class="ui-g ">
+					<div class="ui-g-12 ui-md-12 ui-lg-12">
+						<p:dataTable value="#{pesquisaVendasBean.model}" var="venda" 
+							emptyMessage="Nenhuma venda encontrada" paginator="true" paginatorPosition="bottom"
+							rows="2" id="tabela" lazy="true" >
+							
+							<p:column headerText="Código">
+								<h:outputText value="#{venda.codigo}" />
+							</p:column>
+							<p:column headerText="Nome" style="text-align: left" sortBy="#{venda.cliente.nome}">
+								<h:outputText value="#{venda.cliente.nome}" />
+							</p:column>
+							<p:column headerText="Data de criação" style="text-align: left">
+								<h:outputText value="#{venda.dataCriacao}">
+									<f:converter converterId="localDateTimeConverter" />
+								</h:outputText>
+							</p:column>
+							<p:column headerText="Valor total" style="text-align: left">
+								<h:outputText value="#{venda.valorTotal}">
+									<f:convertNumber type="currency" locale="pt_BR"/>
+								</h:outputText>
+							</p:column>
+							<p:column headerText="Vendedor" style="text-align: left">
+								<h:outputText value="#{venda.usuario.nome}" />
+							</p:column>
+							<p:column headerText="Status" style="text-align: left">
+								<h:outputText value="#{venda.status.descricao}" />
+							</p:column>
+							<p:column styleClass="table-col-acoes">
+								<p:link id="editar" outcome="/venda/CadastroVenda">
+									<span class="fa fa-pencil" />
+									<f:param name="codigo" value="#{venda.codigo}" />
+								</p:link>
+								<p:tooltip for="editar" position="top" value="Editar" />
+							</p:column>
+
+						</p:dataTable>
+					</div>
+				</div>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</html>

@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" 
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	  xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+	  xmlns:p="http://primefaces.org/ui">
+
+	<ui:composition template="/WEB-INF/templates/LayoutPadrao.xhtml">
+		<f:metadata>
+			<f:viewAction action="#{pesquisaUsuariosBean.inicializar()}" />
+		</f:metadata>
+		
+		<ui:define name="titulo">Pesquisa de Usuários</ui:define>
+		
+		<ui:define name="conteudo">
+			<div class="ui-fluid">
+				<div class="ui-g aw-page-header">
+					<div class="ui-g-11">
+						<h1 class="aw-page-title">Pesquisa de Usuários</h1>
+					</div>
+					<div class="ui-g-1">
+						<p:button styleClass="aw-page-control" icon="fa fa-plus-circle" outcome="/usuario/CadastroUsuario" />
+					</div>
+				</div>
+			</div>
+
+			<h:form id="frm">
+				<div class="ui-fluid aw-content-form">
+					<ui:include src="/WEB-INF/templates/DialogoConfirmacaoExclusao.xhtml" /> 
+				
+					<div class="ui-g">
+						<div class="ui-g-12 ui-md-6 ui-lg-6">
+							<p:outputLabel value="Nome" for="nome" />
+							<p:inputText id="nome" value="#{pesquisaUsuariosBean.usuarioFilter.nome}" />
+						</div>
+						<div class="ui-g-12 ui-md-6 ui-lg-6">
+							<p:outputLabel value="E-mail" for="email" />
+							<p:inputText id="email" value="#{pesquisaUsuariosBean.usuarioFilter.email}" />
+						</div>
+					</div>
+					<div class="ui-g">
+						<div class="ui-g-12 ui-md-12 ui-lg-12">
+							<p:outputLabel value="Grupos" for="grupos" />
+							<p:selectManyCheckbox id="grupos" value="#{pesquisaUsuariosBean.usuarioFilter.grupos}">
+								<f:selectItems value="#{pesquisaUsuariosBean.todosGrupos}" var="grupo"
+									 itemValue="#{grupo.codigo}" itemLabel="#{grupo.nome}" />
+							</p:selectManyCheckbox>
+						</div>
+					</div>
+					
+					<div class="ui-g">
+						<div class="ui-g-5 ui-md-3 ui-lg-2">
+							<p:commandButton value="Pesquisar" styleClass="ui-priority-primary" style="width: 100px"
+								update="tabela" process="@form" />
+						</div>
+					</div>
+				</div>
+			
+				<div class="ui-g ">
+					<div class="ui-g-12 ui-md-12 ui-lg-12">
+						<p:dataTable value="#{pesquisaUsuariosBean.model}" var="usuario" 
+							emptyMessage="Nenhum usuário encontrado" paginator="true" paginatorPosition="bottom"
+							rows="2" id="tabela" lazy="true">
+							
+							<p:column headerText="Nome" styleClass="table-usuarios-col-nome" >
+								<h:outputText value="#{usuario.nome}" />
+							</p:column>
+							<p:column headerText="E-mail" styleClass="table-usuarios-col-email" >
+								<h:outputText value="#{usuario.email}" />
+							</p:column>
+							<p:column headerText="Grupo" styleClass="table-usuarios-col-grupo" >
+								<h:outputText value="#{usuario.nomeGrupos}" />
+							</p:column>
+							<p:column headerText="Status" styleClass="table-usuarios-col-status" >
+								<h:outputText value="#{usuario.status}" />
+							</p:column>
+							<p:column styleClass="table-col-acoes">
+								<p:link id="editar" outcome="/usuario/CadastroUsuario">
+									<span class="fa fa-pencil" />
+									<f:param name="codigo" value="#{usuario.codigo}" />
+								</p:link>
+								<p:tooltip for="editar" position="top" value="Editar" />
+								
+								<p:commandLink id="excluir" process="@this" update="@form"
+									action="#{pesquisaUsuariosBean.excluir()}">
+									<span class="fa fa-remove" />
+									<f:setPropertyActionListener value="#{usuario}" 
+										target="#{pesquisaUsuariosBean.usuarioSelecionado}" />
+									<p:confirm message="Excluir '#{usuario.nome}'? Você não poderá recuperar depois." />
+								</p:commandLink>
+								<p:tooltip for="excluir" position="top" value="Excluir" />
+							</p:column>
+
+						</p:dataTable>
+					</div>
+				</div>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</html>

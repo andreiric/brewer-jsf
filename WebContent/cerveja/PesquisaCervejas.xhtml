@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+	
+	<ui:composition template="/WEB-INF/templates/LayoutPadrao.xhtml" >
+
+		<f:metadata>
+			<f:viewAction action="#{pesquisaCervejasBean.inicializar()}" />
+		</f:metadata>
+
+		<ui:define name="titulo">Pesquisa de Cervejas</ui:define>
+		
+		<ui:define name="conteudo">
+			<div class="ui-fluid">
+				<div class="ui-g aw-page-header">
+					<div class="ui-g-11">
+						<h1 class="aw-page-title">Pesquisa de Cervejas</h1>
+					</div>
+					<div class="ui-g-1">
+						<p:button styleClass="aw-page-control" icon="fa fa-plus-circle" outcome="/cerveja/CadastroCerveja" />
+					</div>
+				</div>
+			</div>
+			
+			<h:form id="frm">
+				<div class="ui-fluid aw-content-form">
+					<ui:include src="/WEB-INF/templates/DialogoConfirmacaoExclusao.xhtml" />
+	
+					<div class="ui-g">
+						<div class="ui-g-12 ui-md-6 ui-lg-6">
+							<p:outputLabel value="SKU" for="sku" />
+							<p:inputText id="sku" value="#{pesquisaCervejasBean.cervejaFilter.sku}" />
+						</div>
+						<div class="ui-g-12 ui-md-6 ui-lg-6">
+							<p:outputLabel value="Nome" for="nome" />
+							<p:inputText id="nome" value="#{pesquisaCervejasBean.cervejaFilter.nome}" />
+						</div>
+					</div>
+					
+					<div class="ui-g">
+						<div class="ui-g-12 ui-md-6 ui-lg-6">
+							<p:outputLabel value="Estilo" for="estilo" />
+							<div class="bw-field-action">
+								<p:selectOneMenu id="estilo" value="#{pesquisaCervejasBean.cervejaFilter.estilo}" >
+									<f:selectItem itemLabel="Todos estilos" noSelectionOption="true" />
+									<f:selectItems value="#{pesquisaCervejasBean.todosEstilos}" var="estilo"
+										itemValue="#{estilo}" itemLabel="#{estilo.nome}" />
+								</p:selectOneMenu>
+							</div>
+						</div>
+						<div class="ui-g-12 ui-md-6 ui-lg-6">
+							<p:outputLabel value="Sabor" for="sabor" />
+							<p:selectOneMenu id="sabor" value="#{pesquisaCervejasBean.cervejaFilter.sabor}" >
+								<f:selectItem itemLabel="Todos sabores" noSelectionOption="true"/>
+								<f:selectItems value="#{pesquisaCervejasBean.todosSabores}" var="sabor"
+									itemValue="#{sabor}" itemLabel="#{sabor.descricao}" />
+							</p:selectOneMenu>
+						</div>
+					</div>
+					<div class="ui-g">
+						<div class="ui-g-12 ui-md-6 ui-lg-6">
+							<p:outputLabel value="Origem" for="origem" />
+							<p:selectOneMenu id="origem" value="#{pesquisaCervejasBean.cervejaFilter.origem}" >
+								<f:selectItem itemLabel="Todas origens" noSelectionOption="true"/>
+								<f:selectItems value="#{pesquisaCervejasBean.todasOrigens}" var="origem"
+									itemValue="#{origem}" itemLabel="#{origem.descricao}" />
+							</p:selectOneMenu>
+						</div>
+						<div class="ui-g-12 ui-md-6 ui-lg-6">
+							<p:outputLabel value="Valor unitário" for="valorDe" />
+							<h:panelGrid columns="3" columnClasses="ui-grid-2 ui-grid-1 ui-grid-2"
+								style="margin-top: -2px; margin-left: -2px;">
+								<p:inputText id="valorDe" styleClass="js-decimal">
+									<f:convertNumber type="currency" locale="pt_BR" />
+								</p:inputText>
+								<p:outputLabel value="até" for="valorAte" />
+								<p:inputText id="valorAte" styleClass="js-decimal">
+									<f:convertNumber type="currency" locale="pt_BR" />
+								</p:inputText>
+							</h:panelGrid>
+						</div>
+					</div>					
+					<div class="ui-g">
+						<div class="ui-g-5 ui-md-3 ui-lg-2">
+							<p:commandButton value="Pesquisar" styleClass="ui-priority-primary" style="width: 100px"
+								update="tabela" process="@form" />
+						</div>
+					</div>
+				</div>
+				
+				<div class="ui-g ">
+					<div class="ui-g-12 ui-md-12 ui-lg-12">
+						<p:dataTable value="#{pesquisaCervejasBean.model}" var="cerveja" 
+							emptyMessage="Nenhuma cerveja encontrada" paginator="true" paginatorPosition="bottom"
+							rows="2" id="tabela" lazy="true" >
+							
+							<p:column styleClass="table-cervejas-col-foto">
+								<p:graphicImage name="#{pesquisaCervejasBean.getUrlThumbnailFoto(cerveja.fotoOuMock)}" />
+							</p:column>
+							<p:column headerText="SKU" styleClass="table-cervejas-col-sku" sortBy="#{cerveja.sku}">
+								<h:outputText value="#{cerveja.sku}" />
+							</p:column>
+							<p:column headerText="Nome" styleClass="table-cervejas-col-nome" sortBy="#{cerveja.nome}">
+								<h:outputText value="#{cerveja.nome}" />
+							</p:column>
+							<p:column headerText="Estilo" styleClass="table-cervejas-col-estilo">
+								<h:outputText value="#{cerveja.estilo.nome}" />
+							</p:column>
+							<p:column headerText="Origem" styleClass="table-cervejas-col-origem">
+								<h:outputText value="#{cerveja.origem.descricao}" />
+							</p:column>
+							<p:column headerText="Valor" styleClass="table-cervejas-col-valor">
+								<h:outputText value="#{cerveja.valor}">
+									<f:convertNumber type="currency" locale="pt_BR"/>
+								</h:outputText>
+							</p:column>
+							<p:column styleClass="table-col-acoes">
+								<p:link id="editar" outcome="/cerveja/CadastroCerveja">
+									<span class="fa fa-pencil" />
+									<f:param name="codigo" value="#{cerveja.codigo}" />
+								</p:link>
+								<p:tooltip for="editar" position="top" value="Editar" />
+								
+								<p:commandLink id="excluir" process="@this" update="@form"
+									action="#{pesquisaCervejasBean.excluir()}">
+									<span class="fa fa-remove" />
+									<f:setPropertyActionListener value="#{cerveja}" 
+										target="#{pesquisaCervejasBean.cervejaSelecionada}"/>
+									<p:confirm message="Excluir '#{cerveja.nome}'? Você não poderá recuperar depois." />
+								</p:commandLink>
+								<p:tooltip for="excluir" position="top" value="Excluir" />
+							</p:column>
+
+						</p:dataTable>
+					</div>
+				</div>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</html>

@@ -1,0 +1,76 @@
+<html>
+	<body style="font-family: Arial; font-size: 14px;">
+		
+		<p style="text-align: right">
+			<img src="cid:$logo"/>
+		</p>
+	
+		<h1 style="font-size: 22px">Olá $venda.cliente.nome!</h1>
+		
+		<p>
+			Estamos enviando para você relação de itens da sua compra em nossa loja de cervejas.
+		</p>
+		
+		<table style="width: 100%; border-collapse: collapse;  margin: 20px 0">
+			#foreach ($item in $venda.itens)
+				<tr style="border-bottom: 1px solid #ccc; border-top: 1px solid #ccc">
+					<td style="width: 50px; padding-bottom: 10px; padding-top: 10px">
+					    #if($item.cerveja.temFoto())
+							<img style="width: 40px" src="cid:foto-$item.cerveja.codigo" />
+						#else
+							<img style="width: 40px" src="cid:$cervejaMock" />
+						#end
+					</td>
+					<td style="vertical-align: top; padding-bottom: 10px; padding-top: 10px">
+						<div style="display: block; font-weight: bold; font-size: 16px">$item.cerveja.nome</div>
+						<div style="color: #8e8e8e">$item.cerveja.origem.descricao</div>
+						<div style="color: #8e8e8e">$item.quantidade x R$ $numberTool.format("#0.00", $item.valorUnitario, $locale)</div>
+					</td>
+					<td style="vertical-align: top; text-align: right; padding-bottom: 10px; padding-top: 10px">
+						<span style="display: block; font-weight: bold; font-size: 16px">R$ $numberTool.format("#0.00", $item.valorTotal, $locale)</span>
+					</td>
+				</tr>
+			#end
+		</table>
+		
+		<p style="font-size: 12px">
+			* O status da sua compra é: <strong style="color: red"><span>$venda.status.descricao</span></strong>.
+		</p>
+		
+		<table style="width: 100%;">
+			<tr>
+				<td style="text-align: right; font-weight: bold">Subtotal:</td>
+				<td style="width: 120px; text-align: right">R$ $numberTool.format("#0.00", $venda.valorTotalItens, $locale)</td>
+			</tr>
+			<tr>
+				<td style="text-align: right; font-weight: bold">Frete:</td>
+				<td style="width: 100px; text-align: right">
+					#if($venda.valorFrete) 
+						<span>R$ $numberTool.format("#0.00", $venda.valorFrete, $locale)</span>
+					#else 
+						<span>R$ $numberTool.format("#0.00", 0.00, $locale)</span>
+					#end
+				</td>
+			</tr>
+			<tr>
+				<td style="text-align: right; font-weight: bold">Desconto:</td>
+				<td style="width: 100px; text-align: right">
+					#if($venda.valorDesconto) 
+						<span>R$ $numberTool.format("#0.00", $venda.valorDesconto, $locale)</span>
+					#else 
+						<span>R$ $numberTool.format("#0.00", 0.00, $locale)</span>
+					#end
+				</td>
+			</tr>
+			<tr>
+				<td style="text-align: right; font-weight: bold; font-size: 16px">Total final:</td>
+				<td style="width: 100px; text-align: right; font-weight: bold; font-size: 16px">
+					<span>R$ $numberTool.format("#0.00", $venda.valorTotal, $locale)</span>
+				</td>
+			</tr>
+		</table>
+		
+		<p>Obrigado.</p>
+		<p>Equipe Brewer!</p>
+	</body>
+</html>

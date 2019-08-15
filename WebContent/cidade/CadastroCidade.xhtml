@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:o="http://omnifaces.org/ui">
+
+	<ui:composition template="/WEB-INF/templates/LayoutPadrao.xhtml">
+	
+		<f:metadata>
+			<o:viewParam name="codigo" value="#{cadastroCidadeBean.cidade}" />
+			<f:viewAction action="#{cadastroCidadeBean.inicializar()}" />
+		</f:metadata>
+	
+		<ui:define name="titulo">Cadastro de Cidade</ui:define>
+	
+		<ui:define name="conteudo">
+			<div class="ui-fluid">
+				<div class="ui-g aw-page-header">
+					<div class="ui-g-11">
+						<h1 class="aw-page-title">
+							#{cadastroCidadeBean.cidade.nova ? "Cadastro de Cidade" : "Edição da Cidade - ".concat(cadastroCidadeBean.cidade.nome)}
+						</h1>
+					</div>
+					<div class="ui-g-1">
+						<p:button styleClass="aw-page-control" icon="fa fa-search" outcome="/cidade/PesquisaCidades" />
+					</div>
+				</div>
+			</div>
+	
+			<h:form  id="frm">
+				<div class="ui-fluid aw-content-form">
+					<p:messages autoUpdate="true" closable="true" />
+				
+					<div class="ui-g">
+						<div class="ui-g-12 ui-md-4 ui-lg-4 bw-required">
+							<p:outputLabel value="Estado" for="estado" />
+							<p:selectOneMenu id="estado" value="#{cadastroCidadeBean.cidade.estado}" >
+								<f:selectItem itemLabel="Selecione" noSelectionOption="true" />
+								<f:selectItems value="${cadastroCidadeBean.todosEstados}" var="estado"
+									itemValue="${estado}" itemLabel="${estado.nome}" />
+							</p:selectOneMenu>
+						</div>
+						<div class="ui-g-12 ui-md-8 ui-lg-8 bw-required">
+							<p:outputLabel value="Nome" for="nome" />
+							<p:inputText id="nome" value="${cadastroCidadeBean.cidade.nome}" />
+						</div>
+					</div>
+					<div class="ui-g">
+						<div class="ui-g-4 ui-md-2 ui-lg-1">
+							<p:commandButton value="Salvar" styleClass="ui-priority-primary" update="@form"
+								 action="${cadastroCidadeBean.salvar()}" />
+						</div>
+					</div>
+				</div>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+
+</html>

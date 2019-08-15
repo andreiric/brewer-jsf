@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+
+	<ui:composition>
+		<header class="aw-topbar"> 
+			<h:graphicImage library="images" name="logo.png" />
+	
+			<div style="float: right">
+				<div class="bw-nome-usuario">#{seguranca.nomeUsuario}</div> 
+				<a href="#" class="aw-toggle js-toggle"><i class="fa fa-bars"></i></a>
+				<a href="/brewer_jsf/logout" class="aw-exit"><i class="fa fa-sign-out"></i></a>
+			</div>
+		</header>
+	</ui:composition>
+</html>

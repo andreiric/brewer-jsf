@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:o="http://omnifaces.org/ui">
+
+	<ui:composition template="/WEB-INF/templates/LayoutPadrao.xhtml">
+	
+		<f:metadata>
+			<o:viewParam name="codigo" value="#{cadastroClienteBean.cliente}" />
+			<f:viewAction action="#{cadastroClienteBean.inicializar()}" />
+		</f:metadata>
+	
+		<ui:define name="titulo">Cadastro de Cliente</ui:define>
+	
+		<ui:define name="conteudo">
+			<div class="ui-fluid">
+				<div class="ui-g aw-page-header">
+					<div class="ui-g-11">
+						<h1 class="aw-page-title">
+							#{cadastroClienteBean.cliente.novo ? "Cadastro de Cliente" : "Edição de Cliente - ".concat(cadastroClienteBean.cliente.nome)}
+						</h1>
+					</div>
+					<div class="ui-g-1">
+						<p:button styleClass="aw-page-control" icon="fa fa-search" outcome="/cliente/PesquisaClientes" />
+					</div>
+				</div>
+			</div>
+	
+			<h:form id="frm">
+				<div class="ui-fluid aw-content-form">
+					<p:messages autoUpdate="true" closable="true" />
+				
+					<div class="ui-g">
+						<div class="ui-g-12 ui-md-12 ui-lg-12 bw-required">
+							<p:outputLabel value="Nome" for="nome" />
+							<p:inputText id="nome" value="#{cadastroClienteBean.cliente.nome}" />
+						</div>
+					</div>
+					<div class="ui-g">
+						<div class="ui-g-12 ui-md-4 ui-lg-4 bw-required">
+							<p:outputLabel value="Tipo pessoa" for="tipoPessoa" />
+							<p:selectOneRadio id="tipoPessoa" value="${cadastroClienteBean.cliente.tipoPessoa}">
+								<f:selectItems value="${cadastroClienteBean.todosTiposPessoas}" var="tipoPessoa"
+									 itemValue="${tipoPessoa}" itemLabel="${tipoPessoa.descricao}" />
+								<p:ajax event="change" update="labelCpfOuCnpj cpfOuCnpj" process="@this" />
+							</p:selectOneRadio>
+						</div>
+						<div class="ui-g-12 ui-md-8 ui-lg-8 bw-required">
+							<p:outputLabel id="labelCpfOuCnpj" value="#{cadastroClienteBean.cliente.tipoPessoa == null ? 'CPF/CNPJ' : cadastroClienteBean.cliente.tipoPessoa.documento}" 
+								for="cpfOuCnpj" />
+	 						<p:inputText id="cpfOuCnpj" disabled="#{cadastroClienteBean.cliente.tipoPessoa == null}" value="${cadastroClienteBean.cliente.cpfOuCnpj}"> 
+								<p:ajax event="change" update="@this" process="@this" listener="${cadastroClienteBean.cliente.mascararCpfOuCnpj()}" />
+							</p:inputText>
+						</div>
+					</div>
+					<div class="ui-g">
+						<div class="ui-g-12 ui-md-4 ui-lg-4">
+							<p:outputLabel value="Telefone" for="telefone" />
+							<p:inputText id="telefone" value="#{cadastroClienteBean.cliente.telefone}">
+								<p:ajax event="change" update="@this" process="@this" listener="${cadastroClienteBean.cliente.mascararTelefone()}" />
+							</p:inputText>
+						</div>
+						<div class="ui-g-12 ui-md-8 ui-lg-8 bw-required">
+							<p:outputLabel value="E-mail" for="email" />
+							<p:inputText id="email" value="#{cadastroClienteBean.cliente.email}" />
+						</div>
+					</div>
+					<div class="ui-g">
+						<div class="ui-g-12 ui-md-4 ui-lg-4">
+							<p:outputLabel value="Logradouro" for="logradouro" />
+							<p:inputText id="logradouro" value="#{cadastroClienteBean.cliente.endereco.logradouro}" />
+						</div>
+						<div class="ui-g-12 ui-md-4 ui-lg-4">
+							<p:outputLabel value="Número" for="numero" />
+							<p:inputText id="numero" value="#{cadastroClienteBean.cliente.endereco.numero}" />
+						</div>
+						<div class="ui-g-12 ui-md-4 ui-lg-4">
+							<p:outputLabel value="Complemento" for="complemento" />
+							<p:inputText id="complemento" value="#{cadastroClienteBean.cliente.endereco.complemento}" />
+						</div>
+					</div>
+					<div class="ui-g">
+						<div class="ui-g-12 ui-md-4 ui-lg-4">
+							<p:outputLabel value="CEP" for="cep" />
+							<p:inputMask id="cep" mask="99999-999" value="${cadastroClienteBean.cliente.endereco.cep}" />
+						</div>
+						<div class="ui-g-12 ui-md-4 ui-lg-4">
+							<p:outputLabel value="Estado" for="estado" />
+							<p:selectOneMenu id="estado" value="#{cadastroClienteBean.cliente.endereco.estado}">
+								<f:selectItem itemLabel="Selecione" noSelectionOption="true" />
+								<f:selectItems value="#{cadastroClienteBean.todosEstados}" var="estado"
+									itemValue="${estado}" itemLabel="${estado.nome}" />
+								<p:ajax event="change" process="@this" update="cidade" listener="${cadastroClienteBean.buscarCidades()}" />
+							</p:selectOneMenu>
+						</div>
+						<div class="ui-g-12 ui-md-4 ui-lg-4">
+							<p:outputLabel value="Cidade" for="cidade" />
+							<p:selectOneMenu id="cidade" disabled="${cadastroClienteBean.desabilitaCidades}" value="#{cadastroClienteBean.cliente.endereco.cidade}">
+								<f:selectItem itemLabel="Selecione" noSelectionOption="true" />
+								<f:selectItems value="#{cadastroClienteBean.todasCidades}" var="cidade"
+									itemValue="${cidade}" itemLabel="${cidade.nome}" />
+							</p:selectOneMenu>
+						</div>
+					</div>
+					<div class="ui-g">
+						<div class="ui-g-4 ui-md-2 ui-lg-1">
+							<p:commandButton value="Salvar" styleClass="ui-priority-primary" action="#{cadastroClienteBean.salvar()}" 
+								update="@form"/>
+						</div>
+					</div>
+				</div>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+
+</html>

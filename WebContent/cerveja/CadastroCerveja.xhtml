@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+    xmlns:o="http://omnifaces.org/ui">
+	
+	<ui:composition template="/WEB-INF/templates/LayoutPadrao.xhtml" >
+		
+		<f:metadata>
+			<o:viewParam name="codigo" value="#{cadastroCervejaBean.cerveja}" converter="cervejaConverter" />
+			<f:viewAction action="#{cadastroCervejaBean.inicializar()}" />
+		</f:metadata>
+		
+		<ui:define name="titulo">Cadastro de Cerveja</ui:define>
+	
+		<ui:define name="conteudo">
+			<div class="ui-fluid">
+				<div class="ui-g aw-page-header">
+					<div class="ui-g-11">
+						<h1 class="aw-page-title">
+							#{cadastroCervejaBean.cerveja.nova ? "Cadastro de Cerveja" : "Edição da ".concat(cadastroCervejaBean.cerveja.nome)}
+						</h1>
+					</div>
+					<div class="ui-g-1">
+						<p:button styleClass="aw-page-control" icon="fa fa-search" outcome="/cerveja/PesquisaCervejas" />
+					</div>
+				</div>
+			</div>
+			
+			<h:form id="frm" enctype="multipart/form-data">
+				<div class="ui-fluid aw-content-form">
+					<p:messages autoUpdate="true" closable="true" />
+	
+					<div class="ui-g">
+						<div class="ui-g-12 ui-md-2 ui-lg-2 bw-required">
+							<p:outputLabel value="SKU" for="sku" />
+							<p:inputText id="sku" value="#{cadastroCervejaBean.cerveja.sku}" />
+						</div>
+						<div class="ui-g-12 ui-md-10 ui-lg-10 bw-required">
+							<p:outputLabel value="Nome" for="nome" />
+							<p:inputText id="nome" value="#{cadastroCervejaBean.cerveja.nome}" />
+						</div>
+					</div>
+					<div class="ui-g">
+						<div class="ui-g-12 ui-md-12 ui-lg-12 bw-required">
+							<p:outputLabel value="Descrição" for="descricao" />
+							<p:inputTextarea id="descricao" rows="3" value="#{cadastroCervejaBean.cerveja.descricao}" />
+						</div>
+					</div>	
+					<div class="ui-g">
+						<div class="ui-g-12 ui-md-4 ui-lg-3 bw-required">
+							<p:outputLabel value="Estilo" for="estilo" />
+							<div class="bw-field-action">
+								<p:selectOneMenu id="estilo" value="#{cadastroCervejaBean.cerveja.estilo}" >
+									<f:selectItem itemLabel="Selecione" noSelectionOption="true" />
+									<f:selectItems value="#{cadastroCervejaBean.todosEstilos}" var="estilo" 
+										itemValue="#{estilo}" itemLabel="#{estilo.nome}" />
+								</p:selectOneMenu>
+								
+								<div class="bw-field-action__icon">
+									<p:commandLink actionListener="#{cadastroRapidoEstiloBean.abrirDialogo()}" 
+										process="@this" update="@none">
+										<i class="fa fa-plus-circle bw-fa-plus-circle-large"  />
+										<p:ajax event="dialogReturn" listener="#{cadastroCervejaBean.estiloCadastrado}"
+											process="@this" update="estilo" />
+										<p:resetInput target="estilo" />
+									</p:commandLink>
+								</div>
+							</div>
+						</div>
+						<div class="ui-g-12 ui-md-4 ui-lg-3 bw-required">
+							<p:outputLabel value="Sabor" for="sabor" />
+							<p:selectOneMenu id="sabor" value="#{cadastroCervejaBean.cerveja.sabor}" >
+								<f:selectItem itemLabel="Selecione" noSelectionOption="true"/>
+								<f:selectItems value="#{cadastroCervejaBean.todosSabores}" var="sabor" 
+									itemValue="#{sabor}" itemLabel="#{sabor.descricao}" />
+							</p:selectOneMenu>
+						</div>
+						<div class="ui-g-12 ui-md-4 ui-lg-3 bw-required">
+							<p:outputLabel value="Teor alcoólico" for="teorAlcoolico"> (%)</p:outputLabel>
+							<p:inputText id="teorAlcoolico" styleClass="js-decimal" value="#{cadastroCervejaBean.cerveja.teorAlcoolico}">
+								<f:convertNumber locale="pt_BR" pattern="#,##0.00" />
+							</p:inputText>
+						</div>
+						<div class="ui-g-12 ui-md-4 ui-lg-3 bw-required">
+							<p:outputLabel value="Origem" for="origem" />
+							<p:selectOneRadio id="origem" value="#{cadastroCervejaBean.cerveja.origem}">
+								<f:selectItems value="#{cadastroCervejaBean.todasOrigens}" var="origem" itemValue="#{origem}" itemLabel="#{origem.descricao}" />
+							</p:selectOneRadio>
+						</div>
+					</div>
+					<div class="ui-g">
+						<div class="ui-g-12 ui-md-4 ui-lg-3 bw-required">
+							<p:outputLabel value="Valor" for="valor"> (R$)</p:outputLabel>
+							<p:inputText id="valor" styleClass="js-decimal" value="#{cadastroCervejaBean.cerveja.valor}">
+								<f:convertNumber locale="pt_BR" pattern="#,##0.00"/>
+							</p:inputText>
+						</div>
+						<div class="ui-g-12 ui-md-4 ui-lg-3 bw-required">
+							<p:outputLabel value="Comissão" for="comissao"> (%)</p:outputLabel>
+							<p:inputText id="comissao" styleClass="js-decimal" value="#{cadastroCervejaBean.cerveja.comissao}">
+								<f:convertNumber locale="pt_BR" pattern="#,##0.00" />
+							</p:inputText>
+						</div>
+						<div class="ui-g-12 ui-md-4 ui-lg-3 bw-required">
+							<p:outputLabel value="Estoque" for="estoque" />
+							<p:inputText id="estoque" styleClass="js-plain" value="#{cadastroCervejaBean.cerveja.quantidadeEstoque}">
+								<f:convertNumber locale="pt_BR" pattern="#,##0" />
+							</p:inputText>
+						</div>
+					</div>
+					<div class="ui-g">
+						<p:outputPanel id="uploadFoto" styleClass="ui-g-12 ui-md-12 ui-lg-12">
+							<p:outputLabel value="Foto"><p:outputLabel rendered="#{!cadastroCervejaBean.cerveja.temFoto()}" value=" (Selecione a foto ou arraste abaixo)" /></p:outputLabel>
+							<div>
+								<p:fileUpload rendered="#{!cadastroCervejaBean.cerveja.temFoto()}" fileUploadListener="#{cadastroCervejaBean.uploadFoto}" label="Selecionar" fileLimit="1" auto="true" dragDropSupport="true" 
+									allowTypes="/(\.|\/)(jpe?g|png)$/" invalidFileMessage="Arquivo de imagem inválido." update="uploadFoto" />
+							</div>
+							<div align="center">
+								<p:graphicImage rendered="#{cadastroCervejaBean.cerveja.temFoto()}" name="#{cadastroCervejaBean.urlFoto}" />
+							</div>
+							<div align="center">
+								<p:commandLink rendered="#{cadastroCervejaBean.cerveja.temFoto()}" action="#{cadastroCervejaBean.removerFoto()}" process="@this" update="uploadFoto">
+									<span class="fa fa-remove" />
+								</p:commandLink>
+							</div>
+						</p:outputPanel>
+					</div>
+					<div class="ui-g">
+						<div class="ui-g-4 ui-md-2 ui-lg-1">
+							<p:commandButton value="Salvar" styleClass="ui-priority-primary" action="#{cadastroCervejaBean.salvar()}" update="@form" />
+						</div>
+					</div>
+				</div>
+			</h:form>
+		</ui:define>
+		
+	</ui:composition>
+</html>

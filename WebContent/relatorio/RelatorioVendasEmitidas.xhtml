@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+	<ui:composition template="/WEB-INF/templates/LayoutPadrao.xhtml">
+		
+		<ui:define name="titulo">Relatório - Vendas Emitidas</ui:define>
+		
+		<ui:define name="conteudo">
+			<div class="ui-fluid">
+				<div class="ui-g aw-page-header">
+					<div class="ui-g-11">
+						<h1 class="aw-page-title">Relatório de Vendas Emitidas</h1>
+					</div>
+					<div class="ui-g-1">
+						<p:button styleClass="aw-page-control" icon="fa fa-search" rendered="false" />
+					</div>
+				</div>
+			</div>
+		    
+			<h:form id="frm">
+				<div class="ui-fluid aw-content-form">
+					<p:messages autoUpdate="true" closable="true" />
+				
+					<div class="ui-g">
+						<div class="ui-g-12 ui-md-12 ui-lg-12">
+							<p:outputLabel value="Data de criação" />
+							<h:panelGrid columns="3"
+								style="margin-top: -2px; margin-left: -2px;">
+								<p:calendar id="dataInicial" value="#{relatorioVendasEmitidasBean.dataInicio}" 
+									pattern="dd/MM/yyyy" label="Data Inicial" />
+								<p:outputLabel value="a"/>
+								<p:calendar id="dataFinal" value="#{relatorioVendasEmitidasBean.dataFinal}"
+									pattern="dd/MM/yyyy" label="Data Final" />
+							</h:panelGrid>
+						</div>
+					</div>					
+					<div class="ui-g">
+						<div class="ui-g-5 ui-md-3 ui-lg-2">
+							<p:commandButton value="Emitir" styleClass="ui-priority-primary" style="width: 100px" 
+								action="#{relatorioVendasEmitidasBean.emitir()}" ajax="false" />
+						</div>
+					</div>
+				</div>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</html>

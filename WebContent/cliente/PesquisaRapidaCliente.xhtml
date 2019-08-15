@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+	
+<h:head>
+	<title>Pesquisa de Clientes</title>
+</h:head>
+<h:body>
+	<h:form id="frm">
+		<p:focus for="nome" />
+	
+		<p:messages autoUpdate="true" closable="true" />
+		<div style="margin-top: 5px">
+    		<p:inputText id="nome" size="40" placeholder="Nome do cliente" 
+    			value="#{pesquisaRapidaClienteBean.nome}" />
+    		<p:spacer width="10px"/>
+    		<p:commandButton value="Pesquisar" action="#{pesquisaRapidaClienteBean.pesquisar()}" 
+    			update="@form" />
+    	</div>
+    	
+    	<p:dataTable value="#{pesquisaRapidaClienteBean.clientesFiltrados}" var="cliente"
+    		style="margin-top: 20px" emptyMessage="Nenhum cliente encontrado." rows="10"
+    		paginator="true" paginatorAlwaysVisible="false" paginatorPosition="bottom">
+    		
+    		<p:column headerText="Nome" style="text-align: left">
+    			<h:outputText value="#{cliente.nome}" />
+    		</p:column>
+    		<p:column headerText="Telefone" style="text-align: left">
+    			<h:outputText value="#{cliente.telefone}" />
+    		</p:column>
+    		<p:column style="width: 40px; text-align: center">
+    			<p:commandButton icon="ui-icon-check" title="Selecionar"
+    				action="#{pesquisaRapidaClienteBean.selecionar(cliente)}" />
+    		</p:column>
+    	</p:dataTable>
+	</h:form>
+</h:body>
+	
+</html>

@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+	<ui:composition template="/WEB-INF/templates/LayoutPadrao.xhtml">
+		
+		<f:metadata>
+			<f:viewAction action="#{dashboardBean.inicializar()}" />
+		</f:metadata>
+		
+		<ui:define name="titulo">Dashboard</ui:define>
+		
+		<ui:define name="conteudo">
+			<div class="ui-fluid">
+				<div class="ui-g aw-page-header">
+					<div class="ui-g-11">
+						<h1 class="aw-page-title">Dashboard</h1>
+					</div>
+					<div class="ui-g-1">
+						<p:button styleClass="aw-page-control" icon="fa fa-search" rendered="false" />
+					</div>
+				</div>
+			</div>
+
+			<div class="ui-fluid aw-content-form">
+				<div class="ui-g">
+					<div class="ui-g-12 ui-md-4 ui-lg-4">
+						<div class="aw-box">
+							<div class="aw-box__icon">
+								<i class="fa fa-heartbeat fa-3x"></i>
+							</div>
+							<div class="aw-box__value">
+								<h:outputText value="#{dashboardBean.valorItensEstoque.valor}">
+									<f:convertNumber type="currency" locale="pt_BR" />
+								</h:outputText>
+							</div>
+							<div class="aw-box__title">Valor do estoque</div>
+						</div>
+					</div>
+					<div class="ui-g-12 ui-md-4 ui-lg-4">
+						<div class="aw-box">
+							<div class="aw-box__icon">
+								<i class="fa fa-hashtag fa-3x"></i>
+							</div>
+							<div class="aw-box__value">#{dashboardBean.valorItensEstoque.quantidade}</div>
+							<div class="aw-box__title">Itens no estoque</div>
+						</div>
+					</div>
+					<div class="ui-g-12 ui-md-4 ui-lg-4">
+						<div class="aw-box">
+							<div class="aw-box__icon">
+								<i class="fa fa-users fa-3x"></i>
+							</div>
+							<div class="aw-box__value">#{dashboardBean.totalClientes}</div>
+							<div class="aw-box__title">Total de clientes</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="ui-g">
+					<div class="ui-g-12 ui-md-4 ui-lg-4">
+						<div class="aw-box">
+							<div class="aw-box__icon">
+								<i class="fa fa-usd fa-3x"></i>
+							</div>
+							<div class="aw-box__value">
+								<h:outputText value="#{dashboardBean.vendasNoAno}">
+									<f:convertNumber type="currency" locale="pt_BR" />
+								</h:outputText>
+							</div>
+							<div class="aw-box__title">Vendas no ano</div>
+						</div>
+					</div>
+					<div class="ui-g-12 ui-md-4 ui-lg-4">
+						<div class="aw-box">
+							<div class="aw-box__icon">
+								<i class="fa fa-signal fa-3x"></i>
+							</div>
+							<div class="aw-box__value">
+								<h:outputText value="#{dashboardBean.vendasNoMes}">
+									<f:convertNumber type="currency" locale="pt_BR" />
+								</h:outputText>
+							</div>
+							<div class="aw-box__title">Vendas no mês</div>
+						</div>
+					</div>
+					<div class="ui-g-12 ui-md-4 ui-lg-4">
+						<div class="aw-box">
+							<div class="aw-box__icon">
+								<i class="fa fa-shopping-cart fa-3x"></i>
+							</div>
+							<div class="aw-box__value">
+								<h:outputText value="#{dashboardBean.ticketMedio}">
+									<f:convertNumber type="currency" locale="pt_BR" />
+								</h:outputText>
+							</div>
+							<div class="aw-box__title">Ticket médio</div>
+						</div>
+					</div>
+				</div>
+				
+				<div class="ui-g">
+					<div class="ui-g-12 ui-md-6 ui-lg-6">
+						<div class="aw-graph-box">
+							<div class="aw-graph-box__header">
+								<h2 class="aw-graph-box__title">
+									Vendas por mês <small style="font-size: 10px">últimos 6 meses</small>
+								</h2>
+							</div>
+							<div class="aw-graph-box__content">
+								<div>
+									<p:chart type="line" model="#{dashboardBean.graficoVendasPorMes}" style="height:300px" />
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="ui-g-12 ui-md-6 ui-lg-6">
+						<div class="aw-graph-box">
+							<div class="aw-graph-box__header">
+								<h2 class="aw-graph-box__title">
+									Vendas por origem <small style="font-size: 10px">últimos 6 meses</small>
+								</h2>
+							</div>
+							<div class="aw-graph-box__content">
+								<div>
+									<p:chart type="bar" model="#{dashboardBean.graficoVendasPorOrigem}" style="height:300px" />
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</ui:define>
+	</ui:composition>
+</html>
