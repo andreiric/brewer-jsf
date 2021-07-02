@@ -59,7 +59,7 @@
 		<commons-lang3.version>3.3.2</commons-lang3.version>
 		
 		<!-- Spring Security -->
-		<spring-security.version>5.3.3.RELEASE</spring-security.version>
+		<spring-security.version>5.3.10.RELEASE</spring-security.version>
 		
 		<!-- Envio de E-Mail -->
 		<commons-email.version>1.4</commons-email.version>
